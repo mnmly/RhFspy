@@ -1,0 +1,4 @@
+{
+    // This file will specify the solution we use to build
+    "dotnet.defaultSolution": "RhFspy.generated.sln"
+}

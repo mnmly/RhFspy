@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Rhino 8 (Mac)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-plugin-netcore",
+            // Launches Rhino for us
+            "program": "/Applications/Rhino 8.app/Contents/MacOS/Rhinoceros",
+            // Add in any args here such as -nosplash or even -runscript
+            // See : http://docs.mcneel.com/rhino/8mac/help/en-us/index.htm#information/startingrhino.htm
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            // RHINO_PACKAGE_DIRS is required for Multi-Targeted plugins
+            // This is what enables Rhino to register our Plug-in
+            "env": {
+                "RHINO_PACKAGE_DIRS": "${workspaceFolder}/bin/Debug/net7.0"
+            } 
+        },
+    ],
+    "compounds": []
+}
