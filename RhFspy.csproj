@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net7.0</TargetFrameworks>
-    <Version>1.0</Version>
+    <Version>1.0.1</Version>
     <Title>RhFspy</Title>
     <Description>fSpy Import Plugin</Description>
     <TargetExt>.rhp</TargetExt>

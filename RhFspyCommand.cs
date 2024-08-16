@@ -40,7 +40,10 @@ namespace MNML
             string[] projectNames = fspyProjectList.Select(p => p.FileName).ToArray();
 
             const string projectKey = "FspyProject";
+            const string maxSizeKey = "MaxSize";
+
             var projectIndex = 0; // Default to first project
+            var maxSize = new OptionInteger(1280, 1, 10000); // Default max size with range
 
             var getOption = new GetOption();
             getOption.AcceptNothing(true);
@@ -50,6 +53,8 @@ namespace MNML
             {
                 getOption.ClearCommandOptions();
                 var projectOption = getOption.AddOptionList(projectKey, projectNames, projectIndex);
+                var maxSizeOption = getOption.AddOptionInteger(maxSizeKey, ref maxSize);
+
                 var res = getOption.Get();
 
                 if (res == GetResult.Option)
@@ -59,6 +64,11 @@ namespace MNML
                     if (option.Index == projectOption)
                     {
                         projectIndex = option.CurrentListOptionIndex;
+                    }
+                    else if (option.Index == maxSizeOption)
+                    {
+                        // MaxSize is already updated
+                        RhinoApp.WriteLine($"Max size set to: {maxSize.CurrentValue}");
                     }
                     continue;
                 }
@@ -81,7 +91,7 @@ namespace MNML
 
             FspyProject selectedProject = fspyProjectList[projectIndex];
             var imageSize = new Size(selectedProject.CameraParameters.ImageWidth, selectedProject.CameraParameters.ImageHeight);
-            var scaledSize = Utils.ScaleDimensions(imageSize, 1280);
+            var scaledSize = Utils.ScaleDimensions(imageSize, maxSize.CurrentValue);
             string viewName = selectedProject.FileName;
 
             // Get the fspy view
