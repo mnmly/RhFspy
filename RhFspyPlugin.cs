@@ -66,7 +66,8 @@ namespace MNML
                 }
                 var project = new FspyProject(filename);
                 var cameraInfo = project.GetCameraInfo();
-                var scaledSize = ScaleDimensions(project.CameraParameters.ImageWidth, project.CameraParameters.ImageHeight, 1280);
+                var imageSize = new Size(project.CameraParameters.ImageWidth, project.CameraParameters.ImageHeight);
+                var scaledSize = Utils.ScaleDimensions(imageSize, 1280);
                 var viewName = "fspy Views";
                 var viewRect = new Rectangle(0, 0, scaledSize.Width, scaledSize.Height);
                 var newView = doc.Views.Find(viewName, true);
@@ -123,13 +124,24 @@ namespace MNML
                 {
                     throw new Exception("Failed to add NamedView");
                 }
+
                 newView.Redraw();
-                var sizeString = scaledSize.Width.ToString() + " " + scaledSize.Height.ToString();
-                var scriptString = "-NamedView Restore \"" + name + "\" _Enter ";
-                scriptString    += "-NewFloatingViewport _P \"CopyActive\" _Enter ";
-                scriptString    += "-ViewportProperties _S " + sizeString + " _Enter";
-                Rhino.RhinoApp.RunScript(scriptString, true);
-                Rhino.RhinoApp.WriteLine(scriptString);
+
+                doc.Views.ActiveView = newView;
+                var fspyProjectList = doc.GetList<FspyProject>("fspy");
+                var existingFspyProject = fspyProjectList.Find( e => e.FileName == project.FileName);
+                if (existingFspyProject != null) {
+                    fspyProjectList.Remove(existingFspyProject);
+                }
+                fspyProjectList.Add(project);
+                doc.SetList<FspyProject>("fspy", fspyProjectList);
+
+                // var sizeString = scaledSize.Width.ToString() + " " + scaledSize.Height.ToString();
+                // var scriptString = "-NamedView Restore \"" + name + "\" _Enter ";
+                // scriptString    += "-NewFloatingViewport _P \"CopyActive\" _Enter ";
+                // scriptString    += "-ViewportProperties _S " + sizeString + " _Enter";
+                // Rhino.RhinoApp.RunScript(scriptString, true);
+                // Rhino.RhinoApp.WriteLine(scriptString);
                 return true;
             }
             catch (Exception ex)

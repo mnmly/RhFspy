@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>net7.0</TargetFrameworks>
     <Version>1.0</Version>
     <Title>RhFspy</Title>
-    <Description>Description of RhFspy</Description>
+    <Description>fSpy Import Plugin</Description>
     <TargetExt>.rhp</TargetExt>
   </PropertyGroup>
 
@@ -14,6 +13,7 @@
   
   <ItemGroup>
     <PackageReference Include="RhinoCommon" Version="8.0.23164.14305-wip" IncludeAssets="compile;build" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
   </ItemGroup>
   
 </Project>
