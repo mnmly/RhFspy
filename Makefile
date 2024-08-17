@@ -4,6 +4,7 @@ YAK_PATH := /Applications/Rhino\ 8.app/Contents/Resources/bin/yak
 RELEASE_DIR := bin/release/net7.0
 GITHUB_REPO_NAME := $(shell basename $(PWD))
 PROJECT_FILE := RhFspy.csproj
+YAK_FILE := $(shell find $(RELEASE_DIR) -name "rhfspy-*.yak" | sort -V | tail -n 1)
 
 all: clean build yak
 
@@ -26,11 +27,15 @@ build:
 yak: build
 	@echo "Building with Yak..."
 	@cd $(RELEASE_DIR) && \
-		$(YAK_PATH) spec && \
-		sed -i '' 's|<url>|https://github.com/mnmly/$(GITHUB_REPO_NAME)|g' manifest.yml && \
+		$(YAK_PATH) spec || \
 		$(YAK_PATH) build --platform any
 	@echo "Yak build completed."
 
 publish: yak
+	@if [ -z "$(YAK_FILE)" ]; then \
+		echo "Error: No .yak file found in $(RELEASE_DIR)"; \
+		exit 1; \
+	fi
+	@echo "Publishing Yak file: $(YAK_FILE)"
 	@cd $(RELEASE_DIR) && \
-	$(YAK_PATH) push
+	$(YAK_PATH) push $(notdir $(YAK_FILE))
